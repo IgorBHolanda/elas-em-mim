@@ -15,8 +15,8 @@
       --rose-light: #f5e8e0;
       --rose-dark: #8b4a3a;
       --text: #111111;
-      --text-muted: #333333;
-      --text-faint: #a89690;
+      --text-muted: #111111;
+      --text-faint: #111111;
       --bg: #e6e3e3;
       --bg-card: #f5f3f3;
       --border: rgba(140,100,90,0.15);
@@ -48,7 +48,7 @@
 
     .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
     .hero::before { content: ''; position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(ellipse, rgba(193,122,106,0.07) 0%, transparent 70%); pointer-events: none; }
-    .hero-eyebrow { font-size: 11px; letter-spacing: 0.18em; color: var(--text-faint); text-transform: uppercase; margin-bottom: 2.5rem; animation: fadeUp 0.8s ease both; }
+    .hero-eyebrow { font-size: 11px; letter-spacing: 0.18em; color: #111111; text-transform: uppercase; margin-bottom: 2.5rem; animation: fadeUp 0.8s ease both; }
     .book-wrap { margin-bottom: 2.5rem; animation: fadeUp 0.8s 0.1s ease both; }
     .book { width: 220px; height: 308px; border-radius: 3px 10px 10px 3px; overflow: hidden; position: relative; box-shadow: 6px 8px 24px rgba(139,74,58,0.18), 2px 2px 8px rgba(139,74,58,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: default; }
     .book:hover { transform: translateY(-4px) rotate(-1deg); box-shadow: 10px 16px 36px rgba(139,74,58,0.24), 3px 3px 12px rgba(139,74,58,0.12); }
@@ -64,18 +64,18 @@
       animation: fadeUp 0.8s 0.2s ease both;
     }
     
-    .hero-author { font-size: 14px; letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2rem; animation: fadeUp 0.8s 0.25s ease both; }
+    .hero-author { font-size: 14px; letter-spacing: 0.12em; color: #111111; text-transform: uppercase; margin-bottom: 2rem; animation: fadeUp 0.8s 0.25s ease both; }
     .hero-desc { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; font-weight: 300; color: var(--text-muted); max-width: 440px; line-height: 1.75; margin-bottom: 2.5rem; animation: fadeUp 0.8s 0.3s ease both; }
     .hero-cta { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; animation: fadeUp 0.8s 0.4s ease both; }
     .price-tag { display: inline-flex; align-items: center; gap: 10px; background: var(--bg-card); border: 0.5px solid var(--border-mid); border-radius: 40px; padding: 10px 22px; }
-    .price-label { font-size: 12px; color: var(--text-faint); letter-spacing: 0.06em; }
+    .price-label { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
     .price-val { font-size: 20px; font-weight: 400; color: var(--text); font-family: 'Cormorant Garamond', serif; }
     .cta-btn { background: var(--rose); color: #fff; border: none; border-radius: 40px; padding: 16px 36px; font-size: 15px; font-family: 'Lora', serif; font-weight: 400; letter-spacing: 0.05em; cursor: pointer; transition: opacity 0.2s, transform 0.2s; }
     .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-    .cta-hint { font-size: 12px; color: var(--text-faint); letter-spacing: 0.04em; }
+    .cta-hint { font-size: 12px; color: #111111; letter-spacing: 0.04em; }
 
     section { max-width: 680px; margin: 0 auto; padding: 4rem 2rem; border-bottom: 0.5px solid var(--border); }
-    .section-label { font-size: 10px; letter-spacing: 0.18em; color: var(--text-faint); text-transform: uppercase; margin-bottom: 1.5rem; }
+    .section-label { font-size: 10px; letter-spacing: 0.18em; color: #111111; text-transform: uppercase; margin-bottom: 1.5rem; }
 
     .dedicatoria { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-style: italic; font-weight: 300; color: var(--text-muted); line-height: 1.85; }
     .dedicatoria-nomes { color: var(--orange); font-style: italic; }
@@ -84,19 +84,19 @@
 
     .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .info-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 10px; padding: 14px 16px; }
-    .info-card-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 5px; }
+    .info-card-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #111111; margin-bottom: 5px; }
     .info-card-value { font-size: 15px; color: var(--text); font-weight: 400; }
 
     .steps-box { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 14px; padding: 1.8rem; }
     .steps-header { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; color: var(--text); margin-bottom: 0.4rem; }
-    .steps-sub { font-size: 13px; color: var(--text-faint); margin-bottom: 1.5rem; line-height: 1.6; }
+    .steps-sub { font-size: 13px; color: #111111; margin-bottom: 1.5rem; line-height: 1.6; }
     .steps-list { list-style: none; }
     .steps-list li { display: flex; gap: 14px; align-items: flex-start; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; color: var(--text-muted); line-height: 1.6; }
     .steps-list li:last-child { border-bottom: none; }
     .step-n { font-size: 11px; font-weight: 400; color: var(--rose); min-width: 18px; padding-top: 2px; letter-spacing: 0.04em; }
 
     footer { text-align: center; padding: 2.5rem 2rem; }
-    footer p { font-size: 12px; color: var(--text-faint); letter-spacing: 0.06em; }
+    footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
 
     .overlay { display: none; position: fixed; inset: 0; background: rgba(26,20,16,0.5); z-index: 200; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(4px); }
     .overlay.open { display: flex; }
@@ -105,13 +105,13 @@
     .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-style: italic; font-weight: 300; color: var(--text); margin-bottom: 0.4rem; }
     .modal-sub { font-size: 14px; color: var(--text-muted); line-height: 1.7; margin-bottom: 1.5rem; }
     .pix-card { background: var(--rose-light); border-radius: 12px; padding: 1.2rem; margin-bottom: 1.2rem; }
-    .pix-card-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rose); margin-bottom: 6px; }
+    .pix-card-label { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #111111; margin-bottom: 6px; }
     .pix-card-key { font-size: 17px; font-weight: 400; color: var(--rose-dark); margin-bottom: 8px; }
     .pix-card-amount { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; color: var(--rose-dark); }
-    .modal-note { font-size: 13px; color: var(--text-faint); line-height: 1.65; margin-bottom: 1.4rem; }
+    .modal-note { font-size: 13px; color: #111111; line-height: 1.65; margin-bottom: 1.4rem; }
     .wpp-btn { display: inline-flex; align-items: center; gap: 8px; background: #25d366; color: #fff; border: none; border-radius: 40px; padding: 12px 26px; font-size: 14px; font-family: 'Lora', serif; font-weight: 400; letter-spacing: 0.04em; cursor: pointer; text-decoration: none; transition: opacity 0.2s; margin-bottom: 0.8rem; width: 100%; justify-content: center; }
     .wpp-btn:hover { opacity: 0.88; }
-    .modal-close { background: none; border: 0.5px solid var(--border-mid); border-radius: 40px; padding: 10px 24px; font-size: 13px; color: var(--text-muted); font-family: 'Lora', serif; cursor: pointer; letter-spacing: 0.04em; width: 100%; transition: background 0.2s; }
+    .modal-close { background: none; border: 0.5px solid var(--border-mid); border-radius: 40px; padding: 10px 24px; font-size: 13px; color: #111111; font-family: 'Lora', serif; cursor: pointer; letter-spacing: 0.04em; width: 100%; transition: background 0.2s; }
     .modal-close:hover { background: var(--rose-light); }
 
     @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }

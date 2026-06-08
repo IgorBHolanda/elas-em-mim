@@ -7,15 +7,15 @@
   <meta name="description" content="Algumas pessoas partem, mas o amor por elas não sabe o caminho de volta. Livro de poesia de Igor Holanda." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400&family=Dancing+Script:wght@700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400&family=Dancing+Script:wght@700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --rose: #c17a6a;
       --rose-light: #f5e8e0;
       --rose-dark: #8b4a3a;
-      --text: #1a1410;
-      --text-muted: #6b5c55;
+      --text: #111111;
+      --text-muted: #333333;
       --text-faint: #a89690;
       --bg: #e6e3e3;
       --bg-card: #f5f3f3;
@@ -24,12 +24,26 @@
       --orange: #d4421a;
     }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Jost', sans-serif; font-weight: 300; background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+    body {
+      font-family: 'Lora', serif; font-weight: 400; background-color: #e6e3e3; color: var(--text); line-height: 1.7; min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 200px 200px;
+    }
+    nav, section, .hero, footer, .modal, .overlay { position: relative; z-index: 1; }
     .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
 
     nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; padding: 1.2rem 2rem; display: flex; align-items: center; justify-content: space-between; background: rgba(230,227,227,0.92); backdrop-filter: blur(8px); border-bottom: 0.5px solid var(--border); }
     .nav-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; font-weight: 400; color: var(--text); }
-    .nav-btn { background: var(--rose); color: #fff; border: none; border-radius: 40px; padding: 9px 22px; font-size: 13px; font-family: 'Jost', sans-serif; font-weight: 400; letter-spacing: 0.04em; cursor: pointer; transition: opacity 0.2s; }
+    .nav-btn { background: var(--rose); color: #fff; border: none; border-radius: 40px; padding: 9px 22px; font-size: 13px; font-family: 'Lora', serif; font-weight: 400; letter-spacing: 0.02em; cursor: pointer; transition: opacity 0.2s; }
     .nav-btn:hover { opacity: 0.85; }
 
     .hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 8rem 2rem 4rem; position: relative; overflow: hidden; }
@@ -56,7 +70,7 @@
     .price-tag { display: inline-flex; align-items: center; gap: 10px; background: var(--bg-card); border: 0.5px solid var(--border-mid); border-radius: 40px; padding: 10px 22px; }
     .price-label { font-size: 12px; color: var(--text-faint); letter-spacing: 0.06em; }
     .price-val { font-size: 20px; font-weight: 400; color: var(--text); font-family: 'Cormorant Garamond', serif; }
-    .cta-btn { background: var(--rose); color: #fff; border: none; border-radius: 40px; padding: 16px 36px; font-size: 15px; font-family: 'Jost', sans-serif; font-weight: 400; letter-spacing: 0.05em; cursor: pointer; transition: opacity 0.2s, transform 0.2s; }
+    .cta-btn { background: var(--rose); color: #fff; border: none; border-radius: 40px; padding: 16px 36px; font-size: 15px; font-family: 'Lora', serif; font-weight: 400; letter-spacing: 0.05em; cursor: pointer; transition: opacity 0.2s, transform 0.2s; }
     .cta-btn:hover { opacity: 0.88; transform: translateY(-1px); }
     .cta-hint { font-size: 12px; color: var(--text-faint); letter-spacing: 0.04em; }
 
@@ -95,9 +109,9 @@
     .pix-card-key { font-size: 17px; font-weight: 400; color: var(--rose-dark); margin-bottom: 8px; }
     .pix-card-amount { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 300; color: var(--rose-dark); }
     .modal-note { font-size: 13px; color: var(--text-faint); line-height: 1.65; margin-bottom: 1.4rem; }
-    .wpp-btn { display: inline-flex; align-items: center; gap: 8px; background: #25d366; color: #fff; border: none; border-radius: 40px; padding: 12px 26px; font-size: 14px; font-family: 'Jost', sans-serif; font-weight: 400; letter-spacing: 0.04em; cursor: pointer; text-decoration: none; transition: opacity 0.2s; margin-bottom: 0.8rem; width: 100%; justify-content: center; }
+    .wpp-btn { display: inline-flex; align-items: center; gap: 8px; background: #25d366; color: #fff; border: none; border-radius: 40px; padding: 12px 26px; font-size: 14px; font-family: 'Lora', serif; font-weight: 400; letter-spacing: 0.04em; cursor: pointer; text-decoration: none; transition: opacity 0.2s; margin-bottom: 0.8rem; width: 100%; justify-content: center; }
     .wpp-btn:hover { opacity: 0.88; }
-    .modal-close { background: none; border: 0.5px solid var(--border-mid); border-radius: 40px; padding: 10px 24px; font-size: 13px; color: var(--text-muted); font-family: 'Jost', sans-serif; cursor: pointer; letter-spacing: 0.04em; width: 100%; transition: background 0.2s; }
+    .modal-close { background: none; border: 0.5px solid var(--border-mid); border-radius: 40px; padding: 10px 24px; font-size: 13px; color: var(--text-muted); font-family: 'Lora', serif; cursor: pointer; letter-spacing: 0.04em; width: 100%; transition: background 0.2s; }
     .modal-close:hover { background: var(--rose-light); }
 
     @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }

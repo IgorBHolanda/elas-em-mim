@@ -296,16 +296,33 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
       </div>
       <div class="form-group">
         <label class="form-label">CEP</label>
-        <input type="text" id="f-cep" placeholder="00000-000" maxlength="9" />
+        <div style="position:relative;">
+          <input type="text" id="f-cep" placeholder="00000-000" maxlength="9" oninput="buscarCep(this.value)" />
+          <span id="cep-status" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:12px; color:#888;"></span>
+        </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Endereço completo</label>
-        <input type="text" id="f-endereco" placeholder="Rua, número, complemento" />
+        <label class="form-label">Rua</label>
+        <input type="text" id="f-rua" placeholder="Preenchido automaticamente" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Número</label>
+          <input type="text" id="f-numero" placeholder="Nº" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Complemento</label>
+          <input type="text" id="f-complemento" placeholder="Apto, bloco…" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bairro</label>
+        <input type="text" id="f-bairro" placeholder="Preenchido automaticamente" />
       </div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Cidade</label>
-          <input type="text" id="f-cidade" placeholder="Sua cidade" />
+          <input type="text" id="f-cidade" placeholder="Preenchido automaticamente" />
         </div>
         <div class="form-group">
           <label class="form-label">Estado</label>
@@ -379,16 +396,39 @@ function copiarPix() {
     setTimeout(function(){ btn.textContent = 'Copiar'; }, 2000);
   });
 }
+async function buscarCep(valor) {
+  var cep = valor.replace(/\D/g, '');
+  if (cep.length > 5) {
+    document.getElementById('f-cep').value = cep.slice(0,5) + '-' + cep.slice(5,8);
+  }
+  if (cep.length !== 8) return;
+  document.getElementById('cep-status').textContent = '🔍';
+  try {
+    var resp = await fetch('https://viacep.com.br/ws/' + cep + '/json/');
+    var data = await resp.json();
+    if (data.erro) { document.getElementById('cep-status').textContent = '❌'; return; }
+    document.getElementById('f-rua').value = data.logradouro || '';
+    document.getElementById('f-bairro').value = data.bairro || '';
+    document.getElementById('f-cidade').value = data.localidade || '';
+    document.getElementById('f-estado').value = data.uf || '';
+    document.getElementById('cep-status').textContent = '✓';
+    document.getElementById('f-numero').focus();
+  } catch(e) { document.getElementById('cep-status').textContent = '❌'; }
+}
 async function gerarPix() {
   var nome = document.getElementById('f-nome').value.trim();
   var email = document.getElementById('f-email').value.trim();
   var cpf = document.getElementById('f-cpf').value.trim();
   var cep = document.getElementById('f-cep').value.trim();
-  var endereco = document.getElementById('f-endereco').value.trim();
+  var rua = document.getElementById('f-rua').value.trim();
+  var numero = document.getElementById('f-numero').value.trim();
+  var complemento = document.getElementById('f-complemento').value.trim();
+  var bairro = document.getElementById('f-bairro').value.trim();
   var cidade = document.getElementById('f-cidade').value.trim();
   var estado = document.getElementById('f-estado').value.trim();
-  if (!nome || !email || !cep || !endereco || !cidade || !estado) {
-    alert('Por favor, preencha todos os campos.');
+  var endereco = rua + (numero ? ', ' + numero : '') + (complemento ? ' ' + complemento : '') + (bairro ? ' — ' + bairro : '');
+  if (!nome || !email || !cep || !rua || !numero || !cidade || !estado) {
+    alert('Por favor, preencha todos os campos obrigatórios.');
     return;
   }
   showStep('step-loading');
@@ -407,7 +447,6 @@ async function gerarPix() {
     _paymentId = data.id;
     document.getElementById('qr-img').src = 'data:image/png;base64,' + data.qr_code_base64;
     document.getElementById('qr-code-text').textContent = data.qr_code;
-    // Salvar pedido no Formspree em background
     var fd = new FormData();
     fd.append('nome', nome); fd.append('email', email); fd.append('cpf', cpf);
     fd.append('cep', cep); fd.append('endereco', endereco);

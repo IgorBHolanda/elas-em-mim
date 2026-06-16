@@ -13,7 +13,7 @@ exports.handler = async (event) => {
 
   try {
     const body = JSON.parse(event.body || "{}");
-    const { action, payment_id, nome, email, cpf, token, installments } = body;
+    const { action, payment_id, nome, email, cpf, token, installments, payment_method_id } = body;
 
     // ── Verificar status ──
     if (action === "status") {
@@ -32,7 +32,7 @@ exports.handler = async (event) => {
         token: token,
         description: "Elas em Mim — livro de poesia",
         installments: installments || 1,
-        payment_method_id: "visa", // será sobrescrito pelo token
+        payment_method_id: payment_method_id,
         payer: {
           email: email || "cliente@elasemmimlivro.com",
           identification: cpf ? { type: "CPF", number: cpf.replace(/\D/g, "") } : undefined,

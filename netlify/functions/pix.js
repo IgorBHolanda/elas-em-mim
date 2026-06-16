@@ -13,24 +13,49 @@ exports.handler = async (event) => {
 
   try {
     const body = JSON.parse(event.body || "{}");
-    const { action, payment_id, nome, email, cpf } = body;
+    const { action, payment_id, nome, email, cpf, token, installments } = body;
 
-    // ── Verificar status de pagamento ──
+    // ── Verificar status ──
     if (action === "status") {
       const resp = await fetch(`https://api.mercadopago.com/v1/payments/${payment_id}`, {
         headers: { Authorization: `Bearer ${TOKEN}` },
       });
       const data = await resp.json();
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({ status: data.status }),
+      return { statusCode: 200, headers, body: JSON.stringify({ status: data.status }) };
+    }
+
+    // ── Pagamento por cartão ──
+    if (action === "card") {
+      const idempotencyKey = `elasemmim-card-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const payload = {
+        transaction_amount: 39.90,
+        token: token,
+        description: "Elas em Mim — livro de poesia",
+        installments: installments || 1,
+        payment_method_id: "visa", // será sobrescrito pelo token
+        payer: {
+          email: email || "cliente@elasemmimlivro.com",
+          identification: cpf ? { type: "CPF", number: cpf.replace(/\D/g, "") } : undefined,
+        },
       };
+      const resp = await fetch("https://api.mercadopago.com/v1/payments", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+          "Content-Type": "application/json",
+          "X-Idempotency-Key": idempotencyKey,
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        return { statusCode: 400, headers, body: JSON.stringify({ error: data.message || "Erro no pagamento" }) };
+      }
+      return { statusCode: 200, headers, body: JSON.stringify({ id: data.id, status: data.status }) };
     }
 
     // ── Criar pagamento Pix ──
     const idempotencyKey = `elasemmim-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-
     const payload = {
       transaction_amount: 39.90,
       description: "Elas em Mim — livro de poesia",
@@ -39,12 +64,9 @@ exports.handler = async (event) => {
         email: email || "cliente@elasemmimlivro.com",
         first_name: (nome || "Cliente").split(" ")[0],
         last_name: (nome || "Cliente").split(" ").slice(1).join(" ") || ".",
-        identification: cpf
-          ? { type: "CPF", number: cpf.replace(/\D/g, "") }
-          : undefined,
+        identification: cpf ? { type: "CPF", number: cpf.replace(/\D/g, "") } : undefined,
       },
     };
-
     const resp = await fetch("https://api.mercadopago.com/v1/payments", {
       method: "POST",
       headers: {
@@ -54,20 +76,12 @@ exports.handler = async (event) => {
       },
       body: JSON.stringify(payload),
     });
-
     const data = await resp.json();
-
     if (!resp.ok) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: data.message || "Erro ao criar pagamento" }),
-      };
+      return { statusCode: 400, headers, body: JSON.stringify({ error: data.message || "Erro ao criar pagamento" }) };
     }
-
     return {
-      statusCode: 200,
-      headers,
+      statusCode: 200, headers,
       body: JSON.stringify({
         id: data.id,
         status: data.status,
@@ -76,10 +90,6 @@ exports.handler = async (event) => {
       }),
     };
   } catch (err) {
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({ error: err.message }),
-    };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 };

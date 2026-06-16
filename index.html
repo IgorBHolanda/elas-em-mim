@@ -443,9 +443,12 @@ var _paymentMethod = 'pix';
 var MP_PUBLIC_KEY = 'APP_USR-93c03afe-bf3a-4b66-b96d-3a12d8e7c3f8';
 var mp = null;
 
-window.addEventListener('load', function() {
-  mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
-});
+function getMp() {
+  if (!mp) {
+    try { mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' }); } catch(e) {}
+  }
+  return mp;
+}
 
 function selectPayment(method) {
   _paymentMethod = method;
@@ -577,7 +580,7 @@ async function pagarCartao() {
   if (expiryParts.length !== 2) { alert('Validade inválida.'); return; }
   showStep('step-loading');
   try {
-    var token = await mp.createCardToken({
+    var token = await getMp().createCardToken({
       cardNumber: cardNumber,
       cardholderName: cardName,
       cardExpirationMonth: expiryParts[0],

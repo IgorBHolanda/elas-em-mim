@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400&family=Dancing+Script:wght@700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<script src="https://sdk.mercadopago.com/js/v2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -180,7 +181,14 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
 .confirm-icon { font-size: 48px; margin-bottom: 0.5rem; }
 .confirm-title { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-style: italic; font-weight: 300; color: var(--text); margin-bottom: 0.5rem; }
 .confirm-sub { font-size: 14px; color: #111111; line-height: 1.8; margin-bottom: 1.5rem; }
-/* ── Loading ── */
+/* ── Seleção de pagamento ── */
+.payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.2rem; }
+.payment-opt { border: 0.5px solid var(--border-mid); border-radius: 10px; padding: 12px; cursor: pointer; text-align: center; transition: border-color 0.2s, background 0.2s; background: var(--bg); }
+.payment-opt:hover { border-color: var(--rose); }
+.payment-opt.selected { border-color: var(--rose); background: var(--rose-light); }
+.payment-opt-icon { font-size: 22px; margin-bottom: 4px; }
+.payment-opt-label { font-size: 12px; font-family: 'Lora', serif; color: var(--text); letter-spacing: 0.04em; }
+.card-field-row { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; }
 .loading-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding: 2rem 0; }
 .spinner { width: 32px; height: 32px; border: 2px solid var(--border-mid); border-top-color: var(--rose); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -282,7 +290,7 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
     <!-- STEP 1: Formulário -->
     <div id="step-form">
       <p class="modal-title serif">Fazer pedido</p>
-      <p class="modal-sub">Preencha seus dados para entrega. Em seguida, o QR Code Pix será gerado automaticamente.</p>
+      <p class="modal-sub">Preencha seus dados de entrega.</p>
       <div class="form-group">
         <label class="form-label">Nome completo</label>
         <input type="text" id="f-nome" placeholder="Seu nome" />
@@ -330,7 +338,48 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
           <input type="text" id="f-estado" placeholder="UF" maxlength="2" />
         </div>
       </div>
-      <button class="cta-btn" style="width:100%; margin-top:0.5rem;" onclick="gerarPix()">Gerar QR Code Pix</button>
+
+      <p class="form-label" style="margin-bottom:10px; margin-top:0.8rem;">Forma de pagamento</p>
+      <div class="payment-options">
+        <div class="payment-opt selected" id="opt-pix" onclick="selectPayment('pix')">
+          <div class="payment-opt-icon">⚡</div>
+          <div class="payment-opt-label">Pix</div>
+        </div>
+        <div class="payment-opt" id="opt-card" onclick="selectPayment('card')">
+          <div class="payment-opt-icon">💳</div>
+          <div class="payment-opt-label">Cartão</div>
+        </div>
+      </div>
+
+      <!-- Campos de cartão (ocultos por padrão) -->
+      <div id="card-fields" style="display:none;">
+        <div class="form-group">
+          <label class="form-label">Número do cartão</label>
+          <input type="text" id="f-card-number" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCardNumber(this)" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nome no cartão</label>
+          <input type="text" id="f-card-name" placeholder="Como está no cartão" />
+        </div>
+        <div class="card-field-row">
+          <div class="form-group">
+            <label class="form-label">Validade</label>
+            <input type="text" id="f-card-expiry" placeholder="MM/AA" maxlength="5" oninput="formatExpiry(this)" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">CVV</label>
+            <input type="text" id="f-card-cvv" placeholder="123" maxlength="4" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Parcelas</label>
+          <select id="f-installments" style="width:100%; padding:10px 14px; border:0.5px solid var(--border-mid); border-radius:8px; font-size:14px; font-family:'Lora',serif; color:#111; background:var(--bg); outline:none;">
+            <option value="1">1x de R$ 39,90 (sem juros)</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="cta-btn" style="width:100%; margin-top:0.5rem;" onclick="prosseguirPagamento()">Continuar</button>
       <button class="modal-close" onclick="closeModal()">Cancelar</button>
     </div>
 
@@ -362,7 +411,17 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
       <button class="modal-close" onclick="closeModal()">Fechar</button>
     </div>
 
-    <!-- STEP 4: Confirmado -->
+    <!-- STEP 4: Processando cartão -->
+    <div id="step-card-processing" style="display:none; padding: 1rem 0; text-align:center;">
+      <div class="loading-wrap">
+        <div class="spinner"></div>
+        <p style="font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:var(--text);">Processando pagamento…</p>
+        <p style="font-size:13px; color:#111111; line-height:1.6;">Seu pagamento está sendo analisado.<br>Você receberá a confirmação por e-mail.</p>
+      </div>
+      <button class="modal-close" style="margin-top:1rem;" onclick="closeModal()">Fechar</button>
+    </div>
+
+    <!-- STEP 5: Confirmado -->
     <div id="step-confirmado" style="display:none; padding: 1rem 0;">
       <div class="confirm-icon"><img src="rosa.png" alt="Rosa" style="width:90px; height:90px; object-fit:contain;" /></div>
       <p class="confirm-title" style="font-family:'Lora',serif; font-style:italic;">Pedido confirmado!</p>
@@ -376,6 +435,31 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
 <script>
 var _paymentId = null;
 var _pollTimer = null;
+var _paymentMethod = 'pix';
+var MP_PUBLIC_KEY = 'APP_USR-93c03afe-bf3a-4b66-b96d-3a12d8e7c3f8';
+var mp = null;
+
+window.addEventListener('load', function() {
+  mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' });
+});
+
+function selectPayment(method) {
+  _paymentMethod = method;
+  document.getElementById('opt-pix').classList.toggle('selected', method === 'pix');
+  document.getElementById('opt-card').classList.toggle('selected', method === 'card');
+  document.getElementById('card-fields').style.display = method === 'card' ? 'block' : 'none';
+}
+
+function formatCardNumber(el) {
+  var v = el.value.replace(/\D/g, '').slice(0, 16);
+  el.value = v.replace(/(.{4})/g, '$1 ').trim();
+}
+
+function formatExpiry(el) {
+  var v = el.value.replace(/\D/g, '').slice(0, 4);
+  if (v.length >= 3) el.value = v.slice(0,2) + '/' + v.slice(2);
+  else el.value = v;
+}
 
 function openModal() {
   document.getElementById('overlay').classList.add('open');
@@ -385,8 +469,9 @@ function closeModal() {
   if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
 }
 function showStep(id) {
-  ['step-form','step-loading','step-qr','step-confirmado'].forEach(function(s){
-    document.getElementById(s).style.display = (s === id) ? 'block' : 'none';
+  ['step-form','step-loading','step-qr','step-card-processing','step-confirmado'].forEach(function(s){
+    var el = document.getElementById(s);
+    if (el) el.style.display = (s === id) ? 'block' : 'none';
   });
 }
 function copiarPix() {
@@ -416,28 +501,43 @@ async function buscarCep(valor) {
     document.getElementById('f-numero').focus();
   } catch(e) { document.getElementById('cep-status').textContent = '❌'; }
 }
-async function gerarPix() {
+
+function validarCampos() {
   var nome = document.getElementById('f-nome').value.trim();
   var email = document.getElementById('f-email').value.trim();
   var cpf = document.getElementById('f-cpf').value.trim();
   var cep = document.getElementById('f-cep').value.trim();
   var rua = document.getElementById('f-rua').value.trim();
   var numero = document.getElementById('f-numero').value.trim();
-  var complemento = document.getElementById('f-complemento').value.trim();
-  var bairro = document.getElementById('f-bairro').value.trim();
   var cidade = document.getElementById('f-cidade').value.trim();
   var estado = document.getElementById('f-estado').value.trim();
-  var endereco = rua + (numero ? ', ' + numero : '') + (complemento ? ' ' + complemento : '') + (bairro ? ' — ' + bairro : '');
-  if (!nome || !email || !cep || !rua || !numero || !cidade || !estado) {
+  if (!nome || !email || !cpf || !cep || !rua || !numero || !cidade || !estado) {
     alert('Por favor, preencha todos os campos obrigatórios.');
-    return;
+    return null;
   }
+  var bairro = document.getElementById('f-bairro').value.trim();
+  var complemento = document.getElementById('f-complemento').value.trim();
+  var endereco = rua + (numero ? ', ' + numero : '') + (complemento ? ' ' + complemento : '') + (bairro ? ' — ' + bairro : '');
+  return { nome, email, cpf, cep, endereco, cidade, estado };
+}
+
+async function prosseguirPagamento() {
+  if (_paymentMethod === 'pix') {
+    await gerarPix();
+  } else {
+    await pagarCartao();
+  }
+}
+
+async function gerarPix() {
+  var campos = validarCampos();
+  if (!campos) return;
   showStep('step-loading');
   try {
     var resp = await fetch('/api/pix', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome: nome, email: email, cpf: cpf })
+      body: JSON.stringify({ nome: campos.nome, email: campos.email, cpf: campos.cpf })
     });
     var data = await resp.json();
     if (!resp.ok || data.error) {
@@ -448,13 +548,7 @@ async function gerarPix() {
     _paymentId = data.id;
     document.getElementById('qr-img').src = 'data:image/png;base64,' + data.qr_code_base64;
     document.getElementById('qr-code-text').textContent = data.qr_code;
-    var fd = new FormData();
-    fd.append('nome', nome); fd.append('email', email); fd.append('cpf', cpf);
-    fd.append('cep', cep); fd.append('endereco', endereco);
-    fd.append('cidade', cidade); fd.append('estado', estado);
-    fd.append('payment_id', String(data.id));
-    fd.append('_subject', 'Novo pedido — Elas em Mim');
-    fetch('https://formspree.io/f/mlgkbekg', { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
+    salvarFormspree(campos, data.id, 'pix');
     showStep('step-qr');
     iniciarPolling();
   } catch(e) {
@@ -462,6 +556,77 @@ async function gerarPix() {
     alert('Erro de conexão. Tente novamente.');
   }
 }
+
+async function pagarCartao() {
+  var campos = validarCampos();
+  if (!campos) return;
+  var cardNumber = document.getElementById('f-card-number').value.replace(/\s/g, '');
+  var cardName = document.getElementById('f-card-name').value.trim();
+  var expiry = document.getElementById('f-card-expiry').value;
+  var cvv = document.getElementById('f-card-cvv').value.trim();
+  var installments = document.getElementById('f-installments').value;
+  if (!cardNumber || !cardName || !expiry || !cvv) {
+    alert('Preencha todos os dados do cartão.');
+    return;
+  }
+  var expiryParts = expiry.split('/');
+  if (expiryParts.length !== 2) { alert('Validade inválida.'); return; }
+  showStep('step-loading');
+  try {
+    var token = await mp.createCardToken({
+      cardNumber: cardNumber,
+      cardholderName: cardName,
+      cardExpirationMonth: expiryParts[0],
+      cardExpirationYear: '20' + expiryParts[1],
+      securityCode: cvv,
+      identificationType: 'CPF',
+      identificationNumber: campos.cpf.replace(/\D/g, '')
+    });
+    var resp = await fetch('/api/pix', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'card',
+        token: token.id,
+        installments: parseInt(installments),
+        nome: campos.nome,
+        email: campos.email,
+        cpf: campos.cpf
+      })
+    });
+    var data = await resp.json();
+    if (!resp.ok || data.error) {
+      showStep('step-form');
+      alert('Erro no pagamento: ' + (data.error || 'tente novamente.'));
+      return;
+    }
+    salvarFormspree(campos, data.id, 'cartao');
+    if (data.status === 'approved') {
+      showStep('step-confirmado');
+    } else if (data.status === 'in_process' || data.status === 'pending') {
+      _paymentId = data.id;
+      showStep('step-card-processing');
+    } else {
+      showStep('step-form');
+      alert('Pagamento não aprovado. Verifique os dados do cartão.');
+    }
+  } catch(e) {
+    showStep('step-form');
+    alert('Erro ao processar cartão. Tente novamente.');
+  }
+}
+
+function salvarFormspree(campos, paymentId, metodo) {
+  var fd = new FormData();
+  fd.append('nome', campos.nome); fd.append('email', campos.email); fd.append('cpf', campos.cpf);
+  fd.append('cep', campos.cep); fd.append('endereco', campos.endereco);
+  fd.append('cidade', campos.cidade); fd.append('estado', campos.estado);
+  fd.append('payment_id', String(paymentId));
+  fd.append('metodo', metodo);
+  fd.append('_subject', 'Novo pedido — Elas em Mim (' + metodo + ')');
+  fetch('https://formspree.io/f/mlgkbekg', { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
+}
+
 function iniciarPolling() {
   if (_pollTimer) clearInterval(_pollTimer);
   _pollTimer = setInterval(async function() {
@@ -475,8 +640,10 @@ function iniciarPolling() {
       var data = await resp.json();
       if (data.status === 'approved') {
         clearInterval(_pollTimer); _pollTimer = null;
-        document.getElementById('status-dot').classList.add('confirmed');
-        document.getElementById('status-text').textContent = 'Pagamento confirmado!';
+        var dot = document.getElementById('status-dot');
+        if (dot) dot.classList.add('confirmed');
+        var st = document.getElementById('status-text');
+        if (st) st.textContent = 'Pagamento confirmado!';
         setTimeout(function(){ showStep('step-confirmado'); }, 800);
       }
     } catch(e) { /* silencioso */ }

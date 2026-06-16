@@ -595,7 +595,13 @@ async function pagarCartao() {
   if (expiryParts.length !== 2) { alert('Validade inválida.'); return; }
   showStep('step-loading');
   try {
-    var token = await getMp().createCardToken({
+    // Detectar bandeira via Mercado Pago
+    var mpInstance = getMp();
+    var bin = cardNumber.slice(0, 6);
+    var pmResp = await mpInstance.getPaymentMethods({ bin: bin });
+    var paymentMethodId = (pmResp && pmResp.results && pmResp.results[0]) ? pmResp.results[0].id : 'visa';
+
+    var token = await mpInstance.createCardToken({
       cardNumber: cardNumber,
       cardholderName: cardName,
       cardExpirationMonth: expiryParts[0],
@@ -611,6 +617,7 @@ async function pagarCartao() {
         action: 'card',
         token: token.id,
         installments: parseInt(installments),
+        payment_method_id: paymentMethodId,
         nome: campos.nome,
         email: campos.email,
         cpf: campos.cpf

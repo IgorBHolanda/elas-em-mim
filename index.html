@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta name="google-site-verification" content="Zir3CmFqreKHdFb_XAQD3AnH4lXGGxF8Qm8k17Hp1Oc" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Elas em Mim - Igor Holanda</title>
@@ -285,6 +284,27 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
   </a>
 </section>
 
+<section style="text-align:center;">
+  <p class="section-label">Pergunte ao autor</p>
+  <p class="about-text" style="margin-bottom:1.5rem;">Tem uma pergunta sobre o livro, sobre o processo de escrita ou sobre qualquer coisa? Manda pra mim.</p>
+  <div style="max-width:480px; margin:0 auto; text-align:left;">
+    <div class="form-group">
+      <label class="form-label">Seu nome</label>
+      <input type="text" id="ask-nome" placeholder="Como posso te chamar?" style="width:100%; padding:10px 14px; border:0.5px solid var(--border-mid); border-radius:8px; font-size:14px; font-family:'Lora',serif; color:#111; background:var(--bg); outline:none;" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">E-mail</label>
+      <input type="email" id="ask-email" placeholder="Para eu te responder" style="width:100%; padding:10px 14px; border:0.5px solid var(--border-mid); border-radius:8px; font-size:14px; font-family:'Lora',serif; color:#111; background:var(--bg); outline:none;" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Sua pergunta</label>
+      <textarea id="ask-pergunta" placeholder="Escreva aqui..." rows="4" style="width:100%; padding:10px 14px; border:0.5px solid var(--border-mid); border-radius:8px; font-size:14px; font-family:'Lora',serif; color:#111; background:var(--bg); outline:none; resize:vertical;"></textarea>
+    </div>
+    <button onclick="enviarPergunta()" class="cta-btn" style="width:100%;">Enviar pergunta</button>
+    <p id="ask-feedback" style="display:none; text-align:center; font-size:13px; color:#111; margin-top:0.8rem; font-family:'Lora',serif;"></p>
+  </div>
+</section>
+
 <footer>
   <p>© 2026 Igor Holanda · Todos os direitos reservados</p>
 </footer>
@@ -505,7 +525,38 @@ function copiarPix() {
     setTimeout(function(){ btn.textContent = 'Copiar'; }, 2000);
   });
 }
-async function buscarCep(valor) {
+async function enviarPergunta() {
+  var nome = document.getElementById('ask-nome').value.trim();
+  var email = document.getElementById('ask-email').value.trim();
+  var pergunta = document.getElementById('ask-pergunta').value.trim();
+  var feedback = document.getElementById('ask-feedback');
+  if (!nome || !email || !pergunta) {
+    alert('Por favor, preencha todos os campos.');
+    return;
+  }
+  var fd = new FormData();
+  fd.append('nome', nome);
+  fd.append('email', email);
+  fd.append('pergunta', pergunta);
+  fd.append('_subject', 'Pergunta ao autor — ' + nome);
+  fd.append('_replyto', email);
+  try {
+    var resp = await fetch('https://formspree.io/f/mlgkbekg', {
+      method: 'POST', body: fd, headers: { Accept: 'application/json' }
+    });
+    if (resp.ok) {
+      document.getElementById('ask-nome').value = '';
+      document.getElementById('ask-email').value = '';
+      document.getElementById('ask-pergunta').value = '';
+      feedback.style.display = 'block';
+      feedback.textContent = 'Pergunta enviada! Responderei em breve. ♥';
+    } else {
+      alert('Erro ao enviar. Tente novamente.');
+    }
+  } catch(e) {
+    alert('Erro de conexão. Tente novamente.');
+  }
+}
   var cep = valor.replace(/\D/g, '');
   if (cep.length > 5) {
     document.getElementById('f-cep').value = cep.slice(0,5) + '-' + cep.slice(5,8);

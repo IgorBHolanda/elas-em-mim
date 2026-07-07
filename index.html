@@ -557,6 +557,8 @@ async function enviarPergunta() {
     alert('Erro de conexão. Tente novamente.');
   }
 }
+
+async function buscarCep(valor) {
   var cep = valor.replace(/\D/g, '');
   if (cep.length > 5) {
     document.getElementById('f-cep').value = cep.slice(0,5) + '-' + cep.slice(5,8);

@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400&family=Dancing+Script:wght@700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
-<script src="https://sdk.mercadopago.com/js/v2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -203,7 +202,7 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
 
 <nav>
   <span class="nav-title">Elas em mim</span>
-  <button class="nav-btn" onclick="document.getElementById('overlay').classList.add('open')">Compre agora — R$ 39,90</button>
+  <a class="nav-btn" href="https://www.amazon.com.br/dp/6502150772" target="_blank" rel="noopener" style="text-decoration:none;">Compre na Amazon — R$ 39,90</a>
 </nav>
 
 <div class="hero">
@@ -223,8 +222,8 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
       <span class="price-label">Livro impresso</span>
       <span class="price-val">R$ 39,90</span>
     </div>
-    <button class="cta-btn" onclick="document.getElementById('overlay').classList.add('open')">Comprar agora</button>
-    <span class="cta-hint">Envio pelos Correios para todo o Brasil</span>
+    <a class="cta-btn" href="https://www.amazon.com.br/dp/6502150772" target="_blank" rel="noopener" style="text-decoration:none; display:inline-block;">Comprar na Amazon</a>
+    <span class="cta-hint">Envio pela Amazon para todo o Brasil</span>
   </div>
 </div>
 
@@ -248,31 +247,24 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
   </div>
 </section>
 
-<!-- ── E-book ── -->
+<!-- ── Onde comprar ── -->
 <section>
-  <p class="section-label">Versão digital</p>
+  <p class="section-label">Onde comprar</p>
   <div class="ebook-card">
+    <p class="section-label" style="margin-bottom:0;">Livro impresso</p>
+    <p class="ebook-title serif">Leve estas páginas<br>com você.</p>
+    <p class="ebook-platform">Disponível na Amazon, com envio para todo o Brasil.</p>
+    <a class="kindle-btn" href="https://www.amazon.com.br/dp/6502150772" target="_blank" rel="noopener">
+      Comprar na Amazon
+    </a>
+  </div>
+  <div class="ebook-card" style="margin-top:1rem;">
     <p class="section-label" style="margin-bottom:0;">E-book · Kindle</p>
     <p class="ebook-title serif">Leia onde quiser,<br>no seu ritmo.</p>
     <p class="ebook-platform">Disponível na Amazon para leitura no app Kindle<br>(Android, iOS, PC e Mac) e dispositivos Kindle.</p>
     <a class="kindle-btn" href="https://www.amazon.com.br/dp/B0H4J43K8M" target="_blank" rel="noopener">
       Comprar na Amazon Kindle
     </a>
-  </div>
-</section>
-
-<section>
-  <p class="section-label">Como comprar</p>
-  <div class="steps-box">
-    <p class="steps-header serif">Como funciona a compra</p>
-    <p class="steps-sub">Simples e seguro. Seu livro chega pelos Correios em todo o Brasil.</p>
-    <ul class="steps-list">
-      <li><span class="step-n">01</span><span>Clique em "Comprar agora" e preencha seus dados de entrega</span></li>
-      <li><span class="step-n">02</span><span>Um QR Code Pix é gerado automaticamente no valor de R$ 39,90</span></li>
-      <li><span class="step-n">03</span><span>Escaneie o QR Code ou copie o código no app do seu banco e pague</span></li>
-      <li><span class="step-n">04</span><span>A confirmação é automática e seu pedido é registrado na hora</span></li>
-      <li><span class="step-n">05</span><span>Seu livro é enviado pelos Correios com código de rastreio por e-mail</span></li>
-    </ul>
   </div>
 </section>
 
@@ -310,221 +302,7 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
 </footer>
 
 
-<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-
-    <!-- STEP 1: Formulário -->
-    <div id="step-form">
-      <p class="modal-title serif">Fazer pedido</p>
-      <p class="modal-sub">Preencha seus dados de entrega.</p>
-      <div class="form-group">
-        <label class="form-label">Nome completo</label>
-        <input type="text" id="f-nome" placeholder="Seu nome" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">E-mail</label>
-        <input type="email" id="f-email" placeholder="seu@email.com" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">CPF</label>
-        <input type="text" id="f-cpf" placeholder="000.000.000-00" maxlength="14" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">CEP</label>
-        <div style="position:relative;">
-          <input type="text" id="f-cep" placeholder="00000-000" maxlength="9" oninput="buscarCep(this.value)" />
-          <span id="cep-status" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:12px; color:#888;"></span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Rua</label>
-        <input type="text" id="f-rua" placeholder="Preenchido automaticamente" />
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Número</label>
-          <input type="text" id="f-numero" placeholder="Nº" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Complemento</label>
-          <input type="text" id="f-complemento" placeholder="Apto, bloco…" />
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Bairro</label>
-        <input type="text" id="f-bairro" placeholder="Preenchido automaticamente" />
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Cidade</label>
-          <input type="text" id="f-cidade" placeholder="Preenchido automaticamente" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Estado</label>
-          <input type="text" id="f-estado" placeholder="UF" maxlength="2" />
-        </div>
-      </div>
-
-      <p class="form-label" style="margin-bottom:10px; margin-top:0.8rem;">Forma de pagamento</p>
-      <div class="payment-options">
-        <div class="payment-opt selected" id="opt-pix" onclick="selectPayment('pix')">
-          <div class="payment-opt-icon pix-icon">
-            <img src="pix-icon.png" alt="Pix" style="width:22px; height:22px; object-fit:contain;" />
-          </div>
-          <div class="payment-opt-text">
-            <span class="payment-opt-label">Pix</span>
-            <span class="payment-opt-sub">Aprovação imediata</span>
-          </div>
-        </div>
-        <div class="payment-opt" id="opt-card" onclick="selectPayment('card')">
-          <div class="payment-opt-icon card-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="#4c6ef5" stroke-width="2"/><path d="M2 10h20" stroke="#4c6ef5" stroke-width="2"/><path d="M6 15h4" stroke="#4c6ef5" stroke-width="2" stroke-linecap="round"/></svg>
-          </div>
-          <div class="payment-opt-text">
-            <span class="payment-opt-label">Cartão</span>
-            <span class="payment-opt-sub">Crédito</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Campos de cartão (ocultos por padrão) -->
-      <div id="card-fields" style="display:none;">
-        <div class="form-group">
-          <label class="form-label">Número do cartão</label>
-          <input type="text" id="f-card-number" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCardNumber(this)" />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Nome no cartão</label>
-          <input type="text" id="f-card-name" placeholder="Como está no cartão" />
-        </div>
-        <div class="card-field-row">
-          <div class="form-group">
-            <label class="form-label">Validade</label>
-            <input type="text" id="f-card-expiry" placeholder="MM/AA" maxlength="5" oninput="formatExpiry(this)" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">CVV</label>
-            <input type="text" id="f-card-cvv" placeholder="123" maxlength="4" />
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Parcelas</label>
-          <select id="f-installments" style="width:100%; padding:10px 14px; border:0.5px solid var(--border-mid); border-radius:8px; font-size:14px; font-family:'Lora',serif; color:#111; background:var(--bg); outline:none;">
-            <option value="1">1x de R$ 39,90 (sem juros)</option>
-          </select>
-        </div>
-      </div>
-
-      <button class="cta-btn" style="width:100%; margin-top:0.5rem;" onclick="prosseguirPagamento()">Continuar</button>
-      <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-top:0.8rem; margin-bottom:0.2rem;">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span style="font-size:11px; color:#888; letter-spacing:0.06em;">Pagamento seguro · Mercado Pago · PCI-DSS</span>
-      </div>
-      <button class="modal-close" onclick="closeModal()">Cancelar</button>
-    </div>
-
-    <!-- STEP 2: Loading -->
-    <div id="step-loading" style="display:none;">
-      <div class="loading-wrap">
-        <div class="spinner"></div>
-        <p style="font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:var(--text);">Gerando seu QR Code…</p>
-      </div>
-    </div>
-
-    <!-- STEP 3: QR Code -->
-    <div id="step-qr" style="display:none;">
-      <p class="modal-title serif">Escaneie e pague</p>
-      <p class="modal-sub">Use o app do seu banco para escanear o QR Code ou copie o código abaixo.</p>
-      <div class="qr-wrap">
-        <img id="qr-img" src="" alt="QR Code Pix" />
-      </div>
-      <p style="font-size:11px; color:#111111; letter-spacing:0.1em; text-transform:uppercase; margin:0.8rem 0 0.3rem;">Ou copie o código Pix copia e cola:</p>
-      <div class="pix-copy-box">
-        <span class="pix-copy-code" id="qr-code-text"></span>
-        <button class="pix-copy-btn" onclick="copiarPix()">Copiar</button>
-      </div>
-      <div class="status-bar">
-        <span class="status-dot" id="status-dot"></span>
-        <span id="status-text">Aguardando pagamento…</span>
-      </div>
-      <p style="font-size:12px; color:#111111; margin-top:0.8rem; line-height:1.6;">O QR Code expira em <strong>30 minutos</strong>.<br>A confirmação é automática — não precisa fazer nada.</p>
-      <button class="modal-close" onclick="closeModal()">Fechar</button>
-    </div>
-
-    <!-- STEP 4: Processando cartão -->
-    <div id="step-card-processing" style="display:none; padding: 1rem 0; text-align:center;">
-      <div class="loading-wrap">
-        <div class="spinner"></div>
-        <p style="font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:var(--text);">Processando pagamento…</p>
-        <p style="font-size:13px; color:#111111; line-height:1.6;">Seu pagamento está sendo analisado.<br>Você receberá a confirmação por e-mail.</p>
-      </div>
-      <button class="modal-close" style="margin-top:1rem;" onclick="closeModal()">Fechar</button>
-    </div>
-
-    <!-- STEP 5: Confirmado -->
-    <div id="step-confirmado" style="display:none; padding: 1rem 0;">
-      <div class="confirm-icon"><img src="rosa.png" alt="Rosa" style="width:90px; height:90px; object-fit:contain;" /></div>
-      <p class="confirm-title" style="font-family:'Lora',serif; font-style:italic;">Pedido confirmado!</p>
-      <p class="confirm-sub" style="font-family:'Lora',serif;">Seu pagamento foi recebido com carinho.<br><br>Seu livro será enviado pelos Correios e você receberá o código de rastreio por e-mail.<br><br><em>Elas em Mim</em> já está a caminho de você. ♥</p>
-      <button class="cta-btn" style="width:100%;" onclick="closeModal()">Fechar</button>
-    </div>
-
-  </div>
-</div>
-
 <script>
-var _paymentId = null;
-var _pollTimer = null;
-var _paymentMethod = 'pix';
-var MP_PUBLIC_KEY = 'APP_USR-dc757126-984f-4457-9828-8cd421b61269';
-var mp = null;
-
-function getMp() {
-  if (!mp) {
-    try { mp = new MercadoPago(MP_PUBLIC_KEY, { locale: 'pt-BR' }); } catch(e) {}
-  }
-  return mp;
-}
-
-function selectPayment(method) {
-  _paymentMethod = method;
-  document.getElementById('opt-pix').classList.toggle('selected', method === 'pix');
-  document.getElementById('opt-card').classList.toggle('selected', method === 'card');
-  document.getElementById('card-fields').style.display = method === 'card' ? 'block' : 'none';
-}
-
-function formatCardNumber(el) {
-  var v = el.value.replace(/\D/g, '').slice(0, 16);
-  el.value = v.replace(/(.{4})/g, '$1 ').trim();
-}
-
-function formatExpiry(el) {
-  var v = el.value.replace(/\D/g, '').slice(0, 4);
-  if (v.length >= 3) el.value = v.slice(0,2) + '/' + v.slice(2);
-  else el.value = v;
-}
-
-function openModal() {
-  document.getElementById('overlay').classList.add('open');
-}
-function closeModal() {
-  document.getElementById('overlay').classList.remove('open');
-  if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
-}
-function showStep(id) {
-  ['step-form','step-loading','step-qr','step-card-processing','step-confirmado'].forEach(function(s){
-    var el = document.getElementById(s);
-    if (el) el.style.display = (s === id) ? 'block' : 'none';
-  });
-}
-function copiarPix() {
-  var txt = document.getElementById('qr-code-text').textContent;
-  navigator.clipboard.writeText(txt).then(function(){
-    var btn = document.querySelector('.pix-copy-btn');
-    btn.textContent = 'Copiado!';
-    setTimeout(function(){ btn.textContent = 'Copiar'; }, 2000);
-  });
-}
 async function enviarPergunta() {
   var nome = document.getElementById('ask-nome').value.trim();
   var email = document.getElementById('ask-email').value.trim();
@@ -541,7 +319,7 @@ async function enviarPergunta() {
   fd.append('_subject', 'Pergunta ao autor — ' + nome);
   fd.append('_replyto', email);
   try {
-    var resp = await fetch('https://formspree.io/f/mlgkbekg', {
+    var resp = await fetch('https://formspree.io/f/mlgqnznb', {
       method: 'POST', body: fd, headers: { Accept: 'application/json' }
     });
     if (resp.ok) {
@@ -556,181 +334,6 @@ async function enviarPergunta() {
   } catch(e) {
     alert('Erro de conexão. Tente novamente.');
   }
-}
-
-async function buscarCep(valor) {
-  var cep = valor.replace(/\D/g, '');
-  if (cep.length > 5) {
-    document.getElementById('f-cep').value = cep.slice(0,5) + '-' + cep.slice(5,8);
-  }
-  if (cep.length !== 8) return;
-  document.getElementById('cep-status').textContent = '🔍';
-  try {
-    var resp = await fetch('https://viacep.com.br/ws/' + cep + '/json/');
-    var data = await resp.json();
-    if (data.erro) { document.getElementById('cep-status').textContent = '❌'; return; }
-    document.getElementById('f-rua').value = data.logradouro || '';
-    document.getElementById('f-bairro').value = data.bairro || '';
-    document.getElementById('f-cidade').value = data.localidade || '';
-    document.getElementById('f-estado').value = data.uf || '';
-    document.getElementById('cep-status').textContent = '✓';
-    document.getElementById('f-numero').focus();
-  } catch(e) { document.getElementById('cep-status').textContent = '❌'; }
-}
-
-function validarCampos() {
-  var nome = document.getElementById('f-nome').value.trim();
-  var email = document.getElementById('f-email').value.trim();
-  var cpf = document.getElementById('f-cpf').value.trim();
-  var cep = document.getElementById('f-cep').value.trim();
-  var rua = document.getElementById('f-rua').value.trim();
-  var numero = document.getElementById('f-numero').value.trim();
-  var cidade = document.getElementById('f-cidade').value.trim();
-  var estado = document.getElementById('f-estado').value.trim();
-  if (!nome || !email || !cpf || !cep || !rua || !numero || !cidade || !estado) {
-    alert('Por favor, preencha todos os campos obrigatórios.');
-    return null;
-  }
-  var bairro = document.getElementById('f-bairro').value.trim();
-  var complemento = document.getElementById('f-complemento').value.trim();
-  var endereco = rua + (numero ? ', ' + numero : '') + (complemento ? ' ' + complemento : '') + (bairro ? ' — ' + bairro : '');
-  return { nome, email, cpf, cep, endereco, cidade, estado };
-}
-
-async function prosseguirPagamento() {
-  if (_paymentMethod === 'pix') {
-    await gerarPix();
-  } else {
-    await pagarCartao();
-  }
-}
-
-async function gerarPix() {
-  var campos = validarCampos();
-  if (!campos) return;
-  showStep('step-loading');
-  try {
-    var resp = await fetch('/api/pix', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome: campos.nome, email: campos.email, cpf: campos.cpf })
-    });
-    var data = await resp.json();
-    if (!resp.ok || data.error) {
-      showStep('step-form');
-      alert('Erro ao gerar o Pix: ' + (data.error || 'tente novamente.'));
-      return;
-    }
-    _paymentId = data.id;
-    document.getElementById('qr-img').src = 'data:image/png;base64,' + data.qr_code_base64;
-    document.getElementById('qr-code-text').textContent = data.qr_code;
-    salvarFormspree(campos, data.id, 'pix');
-    showStep('step-qr');
-    iniciarPolling();
-  } catch(e) {
-    showStep('step-form');
-    alert('Erro de conexão. Tente novamente.');
-  }
-}
-
-async function pagarCartao() {
-  var campos = validarCampos();
-  if (!campos) return;
-  var cardNumber = document.getElementById('f-card-number').value.replace(/\s/g, '');
-  var cardName = document.getElementById('f-card-name').value.trim();
-  var expiry = document.getElementById('f-card-expiry').value;
-  var cvv = document.getElementById('f-card-cvv').value.trim();
-  var installments = document.getElementById('f-installments').value;
-  if (!cardNumber || !cardName || !expiry || !cvv) {
-    alert('Preencha todos os dados do cartão.');
-    return;
-  }
-  var expiryParts = expiry.split('/');
-  if (expiryParts.length !== 2) { alert('Validade inválida.'); return; }
-  showStep('step-loading');
-  try {
-    // Detectar bandeira via Mercado Pago
-    var mpInstance = getMp();
-    var bin = cardNumber.slice(0, 6);
-    var pmResp = await mpInstance.getPaymentMethods({ bin: bin });
-    var paymentMethodId = (pmResp && pmResp.results && pmResp.results[0]) ? pmResp.results[0].id : 'visa';
-
-    var token = await mpInstance.createCardToken({
-      cardNumber: cardNumber,
-      cardholderName: cardName,
-      cardExpirationMonth: expiryParts[0],
-      cardExpirationYear: '20' + expiryParts[1],
-      securityCode: cvv,
-      identificationType: 'CPF',
-      identificationNumber: campos.cpf.replace(/\D/g, '')
-    });
-    var resp = await fetch('/api/pix', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'card',
-        token: token.id,
-        installments: parseInt(installments),
-        payment_method_id: paymentMethodId,
-        nome: campos.nome,
-        email: campos.email,
-        cpf: campos.cpf
-      })
-    });
-    var data = await resp.json();
-    if (!resp.ok || data.error) {
-      showStep('step-form');
-      alert('Erro no pagamento: ' + (data.error || 'tente novamente.'));
-      return;
-    }
-    salvarFormspree(campos, data.id, 'cartao');
-    if (data.status === 'approved') {
-      showStep('step-confirmado');
-    } else if (data.status === 'in_process' || data.status === 'pending') {
-      _paymentId = data.id;
-      showStep('step-card-processing');
-    } else {
-      showStep('step-form');
-      alert('Pagamento não aprovado. Verifique os dados do cartão.');
-    }
-  } catch(e) {
-    showStep('step-form');
-    alert('Erro ao processar cartão. Tente novamente.');
-  }
-}
-
-function salvarFormspree(campos, paymentId, metodo) {
-  var fd = new FormData();
-  fd.append('nome', campos.nome); fd.append('email', campos.email); fd.append('cpf', campos.cpf);
-  fd.append('cep', campos.cep); fd.append('endereco', campos.endereco);
-  fd.append('cidade', campos.cidade); fd.append('estado', campos.estado);
-  fd.append('payment_id', String(paymentId));
-  fd.append('metodo', metodo);
-  fd.append('_subject', 'Novo pedido — Elas em Mim (' + metodo + ')');
-  fetch('https://formspree.io/f/mlgkbekg', { method: 'POST', body: fd, headers: { Accept: 'application/json' } });
-}
-
-function iniciarPolling() {
-  if (_pollTimer) clearInterval(_pollTimer);
-  _pollTimer = setInterval(async function() {
-    if (!_paymentId) return;
-    try {
-      var resp = await fetch('/api/pix', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'status', payment_id: _paymentId })
-      });
-      var data = await resp.json();
-      if (data.status === 'approved') {
-        clearInterval(_pollTimer); _pollTimer = null;
-        var dot = document.getElementById('status-dot');
-        if (dot) dot.classList.add('confirmed');
-        var st = document.getElementById('status-text');
-        if (st) st.textContent = 'Pagamento confirmado!';
-        setTimeout(function(){ showStep('step-confirmado'); }, 800);
-      }
-    } catch(e) { /* silencioso */ }
-  }, 5000);
 }
 </script>
 </body>

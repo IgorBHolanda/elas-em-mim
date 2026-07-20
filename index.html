@@ -88,15 +88,23 @@ section { max-width: 680px; margin: 0 auto; padding: 4rem 2rem; border-bottom: 0
 .step-n { font-size: 11px; font-weight: 400; color: var(--rose); min-width: 18px; padding-top: 2px; letter-spacing: 0.04em; }
 
 /* ── Trechos do livro ── */
+.trecho-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .trecho-card {
   background: var(--bg-card);
   border: 0.5px solid var(--border);
   border-left: 3px solid var(--rose);
   border-radius: 10px;
-  padding: 1.8rem;
+  padding: 1.6rem 1.4rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-.trecho-titulo { font-size: 13px; font-style: italic; color: var(--rose); letter-spacing: 0.04em; margin-bottom: 0.9rem; }
-.trecho-texto { font-size: 18px; font-style: italic; font-weight: 300; color: var(--text); line-height: 1.85; }
+.trecho-titulo { font-size: 12px; font-style: italic; color: var(--rose); letter-spacing: 0.04em; margin-bottom: 0.7rem; }
+.trecho-texto { font-size: 17px; font-style: italic; font-weight: 300; color: var(--text); line-height: 1.7; }
+@media (max-width: 680px) {
+  .trecho-grid { grid-template-columns: 1fr; }
+}
 
 /* ── E-book section ── */
 .ebook-card {
@@ -251,9 +259,19 @@ footer p { font-size: 12px; color: #111111; letter-spacing: 0.06em; }
 <!-- ── Trechos do livro ── -->
 <section>
   <p class="section-label">Trechos do livro</p>
-  <div class="trecho-card">
-    <p class="trecho-titulo serif">Memórias</p>
-    <p class="trecho-texto serif">Você ainda perpétua nos meus pensamentos. Tira-me as lágrimas que estão reprimidas, escondidas no cansaço frenético do dia. Tua força me faz sobreviver. Esvairia, mesmo que por instantes, esse excesso de futuro que me consome e que me joga ladeira abaixo, como se eu fosse uma fruta podre caindo do pé de árvore. Esse chacoalho tão necessário. Ah a memória tua, tão boa e ao mesmo tempo tão assustadora, me mostra a vulnerabilidade de uma época que causou cicatrizes desarranjadas, profundas e duradouras feito o ferro quente que marca o gado. Mesmo assim, orquestro pela tua apareça, busco a sagração que me mantém firme. Busco você, hoje, amanhã, depois de amanhã, até que essa busca não seja apenas um mero devaneio.</p>
+  <div class="trecho-grid">
+    <div class="trecho-card">
+      <p class="trecho-titulo serif">Memórias · pág. 22</p>
+      <p class="trecho-texto serif">Tua força me faz sobreviver.</p>
+    </div>
+    <div class="trecho-card">
+      <p class="trecho-titulo serif">Poema sobre saudade · pág. 30</p>
+      <p class="trecho-texto serif">Outros se habituam<br>Eu, transfiguro a dor<br>Entendo agora<br>Saudade só é possível pra quem já amou.</p>
+    </div>
+    <div class="trecho-card">
+      <p class="trecho-titulo serif">Quem é você quando Deus te faz perder · pág. 34</p>
+      <p class="trecho-texto serif">Quem você é quando perde? Talvez seja aquele que chora com os joelhos no chão, que grita no travesseiro, mas levanta no dia seguinte. Que desaprende o controle para reaprender a confiar. Que não entende, mas não desiste. Que não vê, mas caminha. Que se quebra, mas não se perde de si mesmo.</p>
+    </div>
   </div>
 </section>
 
